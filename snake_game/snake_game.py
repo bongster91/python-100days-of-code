@@ -62,6 +62,13 @@ class Snake:
     def right(self):
         if self.head.heading() != LEFT:
             self.head.setheading(RIGHT)
+            
+    def reset(self):
+        for seg in self.segments:
+            seg.goto(1000, 1000)
+        self.segments.clear()
+        self.create_snake()
+        self.head = self.segments[0]
 
 
 class Food(Turtle):
@@ -90,6 +97,8 @@ class Scoreboard(Turtle):
     def __init__(self):
         super().__init__()
         self.score = 0
+        with open("data.txt") as data:
+            self.high_score = int(data.read())
         self.color('white')
         self.shape(None)
         self.penup()
@@ -99,14 +108,24 @@ class Scoreboard(Turtle):
         
     
     def update_scoreboard(self):
-        self.write(f"Score: {self.score}", move=True, align=ALIGNMENT, font=FONT)
+        self.clear()
+        self.write(f"Score: {self.score} High Score: {self.high_score}", align=ALIGNMENT, font=FONT)
     
     def add_score(self):
         self.clear()
         self.score += 1
         self.update_scoreboard()
         
+    
+    def reset(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+            with open("data.txt", mode="w") as data:
+                data.write(f'{self.high_score}')
+        self.score = 0
+        self.update_scoreboard()
         
+    
     def game_over(self):
         self.goto(0, 0)
         self.write("GAME OVER", align=ALIGNMENT, font=FONT)
@@ -136,13 +155,14 @@ while game_is_on:
 
     #Detect collision with wall
     if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
-        game_is_on = False
-        score.game_over()
+        score.reset()
+        snake.reset()
         
     #Detect collision with tail
     for segment in snake.segments[1:]:
         if snake.head.distance(segment) < 10:
             game_is_on = False
-            score.game_over()
+            score.reset()
+            snake.reset()
         
 screen.exitonclick()
