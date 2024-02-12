@@ -13,7 +13,7 @@ webpage = response.text
 # article_upvote = soup.find(name='span', class_='score').getText()
 
 soup = BeautifulSoup(webpage, 'html.parser')
-movies_list = soup.find_all(name='h3', class_='listicleItem_listicle-item__title__BfenH')
+movies_list = soup.find_all(name='h3', class_='c-title')
 movies_list.reverse()
 movie_titles = [movie.getText() for movie in movies_list]
 
