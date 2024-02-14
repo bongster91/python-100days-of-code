@@ -37,7 +37,7 @@ search_params = {
 track_uris = []
 
 for song in songs_list:
-    track_search_response = sp.search(q=f"track:{song} year:2000-08-12", type=['track'])
+    track_search_response = sp.search(q=f"track:{song}", type=['track'])
     try:
         uri = track_search_response['tracks']['items'][0]['uri']
         track_uris.append(uri)
@@ -47,4 +47,4 @@ for song in songs_list:
 new_playlist = sp.user_playlist_create(user=user_id, name=f"new playlist", public=False)
 new_playlist_id = new_playlist['id']
 
-add_to_playlist = sp.playlist_add_items(playlist_id=new_playlist_id, items=track_uris, position=0)
+add_to_playlist = sp.playlist_add_items(playlist_id=new_playlist_id, items=track_uris, position=1)
